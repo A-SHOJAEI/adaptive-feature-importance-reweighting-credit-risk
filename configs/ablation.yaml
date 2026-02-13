@@ -1,0 +1,134 @@
+# Ablation study configuration - baseline without adaptive reweighting
+
+# Random seed for reproducibility
+seed: 42
+
+# Data configuration
+data:
+  dataset_name: "home_credit"
+  train_size: 0.7
+  val_size: 0.15
+  test_size: 0.15
+  sample_frac: 1.0
+  min_samples: 10000
+
+# Model configuration (same as default)
+model:
+  type: "ensemble"
+
+  lightgbm:
+    boosting_type: "gbdt"
+    num_leaves: 31
+    max_depth: 6
+    learning_rate: 0.05
+    n_estimators: 500
+    min_child_samples: 20
+    subsample: 0.8
+    subsample_freq: 1
+    colsample_bytree: 0.8
+    reg_alpha: 0.1
+    reg_lambda: 0.1
+    random_state: 42
+    n_jobs: -1
+    importance_type: "gain"
+
+  xgboost:
+    max_depth: 6
+    learning_rate: 0.05
+    n_estimators: 500
+    min_child_weight: 1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    reg_alpha: 0.1
+    reg_lambda: 0.1
+    random_state: 42
+    n_jobs: -1
+    tree_method: "hist"
+    enable_categorical: true
+
+  catboost:
+    iterations: 500
+    depth: 6
+    learning_rate: 0.05
+    l2_leaf_reg: 0.1
+    subsample: 0.8
+    random_state: 42
+    verbose: 0
+    thread_count: -1
+    task_type: "CPU"
+
+  ensemble_weights:
+    lightgbm: 0.4
+    xgboost: 0.35
+    catboost: 0.25
+
+# Adaptive reweighting - DISABLED for baseline
+reweighting:
+  enabled: false
+  strategy: "shap"
+  update_frequency: 5
+  warmup_epochs: 10
+  top_k_features: 20
+  reweight_alpha: 0.3
+  temporal_decay: 0.95
+  segment_bins: 5
+  min_importance_threshold: 0.01
+
+# Curriculum learning - DISABLED for baseline
+curriculum:
+  enabled: false
+  warmup_epochs: 15
+  initial_easy_ratio: 0.7
+  final_easy_ratio: 0.3
+  difficulty_metric: "prediction_variance"
+  schedule: "linear"
+
+# Training configuration
+training:
+  num_boost_round: 100
+  early_stopping_rounds: 20
+  verbose_eval: 10
+  use_best_iteration: true
+
+# Optimization configuration
+optimization:
+  enabled: false
+  n_trials: 50
+  timeout: 3600
+  n_jobs: 1
+  sampler: "tpe"
+
+# Evaluation metrics
+metrics:
+  primary: "roc_auc"
+  track:
+    - "roc_auc"
+    - "pr_auc"
+    - "ks_statistic"
+    - "gini"
+    - "brier_score"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_dir: "logs"
+  mlflow:
+    enabled: true
+    experiment_name: "adaptive_feature_importance_baseline"
+    tracking_uri: "file:./mlruns"
+
+# Checkpoint configuration
+checkpoint:
+  save_dir: "models"
+  save_best_only: true
+  monitor: "roc_auc"
+  mode: "max"
+
+# Output configuration
+output:
+  results_dir: "results"
+  save_predictions: true
+  save_feature_importance: true
+  save_shap_values: false
+  generate_plots: true
