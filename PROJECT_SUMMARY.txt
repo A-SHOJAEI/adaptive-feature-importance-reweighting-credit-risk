@@ -1,0 +1,113 @@
+================================================================================
+ADAPTIVE FEATURE IMPORTANCE REWEIGHTING FOR CREDIT RISK
+================================================================================
+
+PROJECT OVERVIEW
+----------------
+Production-quality ML project implementing adaptive feature importance 
+reweighting for credit default prediction. Combines gradient-based feature 
+attribution with temporal curriculum learning.
+
+NOVEL CONTRIBUTION
+------------------
+- Adaptive loss weighting mechanism that rebalances feature importance based 
+  on per-epoch SHAP value distributions
+- Temporal curriculum learning for progressive sample difficulty scaling
+- Risk segment stratification for targeted reweighting
+
+KEY FEATURES
+------------
+✓ Ensemble of LightGBM, XGBoost, and CatBoost models
+✓ Adaptive feature importance reweighting (SHAP, permutation, gradient-based)
+✓ Curriculum learning scheduler with multiple schedules
+✓ Comprehensive evaluation metrics (ROC-AUC, PR-AUC, KS statistic, Gini)
+✓ Full training pipeline with early stopping and checkpointing
+✓ MLflow integration for experiment tracking
+✓ Production-ready prediction script
+✓ Extensive test suite (>70% coverage target)
+
+PROJECT STRUCTURE
+-----------------
+├── src/adaptive_feature_importance_reweighting_credit_risk/
+│   ├── data/              # Data loading and preprocessing
+│   ├── models/            # Model implementations and custom components
+│   ├── training/          # Training loop with adaptive reweighting
+│   ├── evaluation/        # Metrics and analysis
+│   └── utils/             # Configuration management
+├── scripts/
+│   ├── train.py           # Training pipeline (MUST be runnable)
+│   ├── evaluate.py        # Evaluation pipeline
+│   └── predict.py         # Inference pipeline
+├── configs/
+│   ├── default.yaml       # Full model with adaptive reweighting
+│   └── ablation.yaml      # Baseline without reweighting
+├── tests/                 # Comprehensive test suite
+└── results/               # Output directory for results
+
+QUICK START
+-----------
+1. Install dependencies:
+   pip install -r requirements.txt
+
+2. Train the model:
+   python scripts/train.py --config configs/default.yaml
+
+3. Evaluate on test set:
+   python scripts/evaluate.py --checkpoint models/best_model.pkl
+
+4. Make predictions:
+   python scripts/predict.py --checkpoint models/best_model.pkl --input data/sample.csv
+
+ABLATION STUDY
+--------------
+Compare baseline vs. full model:
+
+# Baseline (no adaptive reweighting)
+python scripts/train.py --config configs/ablation.yaml
+
+# Full model (with adaptive reweighting)
+python scripts/train.py --config configs/default.yaml
+
+TESTING
+-------
+Run test suite:
+pytest tests/ -v --cov=src --cov-report=html
+
+KEY FILES
+---------
+- src/models/components.py: Custom adaptive reweighting and curriculum learning
+- src/training/trainer.py: Main training loop with progressive reweighting
+- src/evaluation/metrics.py: Comprehensive credit risk metrics
+- configs/default.yaml: Full configuration with all hyperparameters
+
+METRICS TRACKED
+---------------
+- ROC-AUC (primary metric)
+- PR-AUC (handling class imbalance)
+- KS Statistic (model discrimination power)
+- Gini Coefficient (ranking quality)
+- Brier Score (calibration)
+- Precision, Recall, F1-Score
+
+CUSTOM COMPONENTS
+-----------------
+1. AdaptiveFeatureReweighter: Dynamic sample weighting based on feature importance
+2. CurriculumScheduler: Progressive difficulty scheduling
+3. Adaptive loss reweighting in training loop
+4. Risk segment stratification
+
+STATISTICS
+----------
+- Total Lines of Code: ~3,900
+- Python Files: 25
+- Test Files: 3
+- Test Functions: 30+
+- Configuration Files: 2
+
+AUTHOR
+------
+Alireza Shojaei (2026)
+
+LICENSE
+-------
+MIT License - See LICENSE file for details
