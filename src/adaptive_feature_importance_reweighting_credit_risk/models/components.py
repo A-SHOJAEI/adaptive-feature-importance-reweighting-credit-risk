@@ -5,7 +5,12 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-import shap
+try:
+    import shap
+    SHAP_AVAILABLE = True
+except ImportError:
+    shap = None
+    SHAP_AVAILABLE = False
 from scipy.stats import rankdata
 
 logger = logging.getLogger(__name__)
@@ -91,6 +96,9 @@ class AdaptiveFeatureReweighter:
         Returns:
             Array of absolute mean SHAP values per feature
         """
+        if not SHAP_AVAILABLE:
+            logger.warning("shap not installed, falling back to model-based importance")
+            return self._get_model_importance(model, X)
         try:
             # Sample data if too large
             if len(X) > sample_size:
@@ -461,6 +469,9 @@ class CurriculumScheduler:
         # Rank samples by difficulty (lower rank = easier)
         difficulty_ranks = rankdata(difficulty, method="ordinal")
         threshold_rank = int(len(difficulty) * easy_ratio)
+
+        # Ensure minimum threshold to avoid filtering out all samples
+        threshold_rank = max(threshold_rank, 100)
 
         # Include samples below threshold (easier samples)
         mask = difficulty_ranks <= threshold_rank

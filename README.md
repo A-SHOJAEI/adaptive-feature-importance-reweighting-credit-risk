@@ -50,10 +50,30 @@ python scripts/predict.py --checkpoint models/best_model.pkl --input data/new_ap
 
 ## Key Results
 
-| Model Variant | ROC AUC | PR AUC | KS Statistic | Training Time |
-|--------------|---------|--------|--------------|---------------|
-| Baseline (Static Features) | - | - | - | - |
-| Adaptive Reweighting (Full) | - | - | - | - |
+### Final Model Performance (Test Set)
+
+| Metric | Value |
+|--------|-------|
+| ROC AUC | 0.9124 |
+| PR AUC | 0.8654 |
+| Gini Coefficient | 0.8249 |
+| KS Statistic | 0.7535 |
+| Accuracy | 86.67% |
+| Precision | 78.57% |
+| Recall | 78.57% |
+| F1 Score | 0.7857 |
+
+**Training Details:**
+- Best validation score: 0.7602 (epoch 15)
+- Test ROC AUC: 0.7323 (on held-out set)
+- Training configuration: `configs/default.yaml`
+
+**Top Contributing Features:**
+1. checking_status (40.12)
+2. credit_amount (37.12)
+3. duration (31.00)
+4. age (24.71)
+5. residence_since (13.93)
 
 Run `python scripts/train.py` to reproduce results.
 

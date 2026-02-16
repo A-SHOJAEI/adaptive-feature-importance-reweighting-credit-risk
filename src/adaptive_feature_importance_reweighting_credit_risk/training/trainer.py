@@ -87,7 +87,8 @@ class AdaptiveTrainer:
         self.best_score_: Optional[float] = None
         self.best_epoch_: int = 0
         self.history_: Dict[str, List[float]] = {}
-        self.prediction_history_: List[np.ndarray] = []
+        self.prediction_history_: List[np.ndarray] = []  # Validation predictions
+        self.train_prediction_history_: List[np.ndarray] = []  # Training predictions
 
     def train(
         self,
@@ -138,6 +139,16 @@ class AdaptiveTrainer:
                 X_train_epoch = X_train[curriculum_mask]
                 y_train_epoch = y_train[curriculum_mask]
                 sample_weight_epoch = sample_weight[curriculum_mask] if sample_weight is not None else None
+
+                # Safety check: ensure we have both classes after filtering
+                if len(y_train_epoch.unique()) < 2:
+                    logger.warning(
+                        f"Epoch {epoch}: Curriculum filtering resulted in only one class. "
+                        "Using full training set instead."
+                    )
+                    X_train_epoch = X_train
+                    y_train_epoch = y_train
+                    sample_weight_epoch = sample_weight
             else:
                 X_train_epoch = X_train
                 y_train_epoch = y_train
@@ -156,6 +167,10 @@ class AdaptiveTrainer:
             if self.reweighter is not None and epoch % self.reweighting_config.get("update_frequency", 5) == 0:
                 if epoch >= self.reweighting_config.get("warmup_epochs", 10):
                     self.reweighter.update_importance(self.model, X_train, y_train)
+
+            # Store training predictions for curriculum learning
+            train_pred = self.model.predict_proba(X_train)[:, 1]
+            self.train_prediction_history_.append(train_pred)
 
             # Evaluate
             val_pred = self.model.predict_proba(X_val)[:, 1]
@@ -258,12 +273,12 @@ class AdaptiveTrainer:
         if epoch < self.curriculum_config.get("warmup_epochs", 15):
             return None
 
-        # Get predictions
+        # Get predictions on training set
         predictions = self.model.predict_proba(X)[:, 1]
 
-        # Compute difficulty
+        # Compute difficulty using training prediction history
         difficulty = self.curriculum.compute_difficulty(
-            predictions, y, self.prediction_history_
+            predictions, y, self.train_prediction_history_
         )
 
         # Get curriculum mask
