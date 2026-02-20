@@ -1,0 +1,159 @@
+{
+  "experiment": {
+    "name": "adaptive-feature-importance-reweighting-credit-risk",
+    "config": "configs/default.yaml",
+    "seed": 42,
+    "date": "2026-02-19",
+    "duration_minutes": 62
+  },
+  "dataset": {
+    "name": "German Credit",
+    "total_samples": 1000,
+    "num_features": 20,
+    "numerical_features": 16,
+    "categorical_features": 4,
+    "target_distribution": {
+      "non_default": 700,
+      "default": 300
+    },
+    "splits": {
+      "train": 700,
+      "validation": 150,
+      "test": 150
+    }
+  },
+  "model": {
+    "type": "ensemble",
+    "base_learners": 3,
+    "components": ["LightGBM", "XGBoost", "CatBoost"],
+    "ensemble_weights": {
+      "lightgbm": 0.4,
+      "xgboost": 0.35,
+      "catboost": 0.25
+    }
+  },
+  "training": {
+    "max_rounds": 30,
+    "early_stopping_rounds": 10,
+    "best_epoch": 14,
+    "best_val_roc_auc": 0.8171,
+    "stopped_at_epoch": 24,
+    "early_stopping_triggered": true,
+    "reweighting_strategy": "permutation",
+    "reweighting_update_frequency": 5,
+    "curriculum_learning_enabled": true,
+    "curriculum_warmup_epochs": 8,
+    "validation_progression": {
+      "epoch_0": 0.7934,
+      "epoch_10": 0.7920,
+      "epoch_14": 0.8171,
+      "epoch_20": 0.7708
+    }
+  },
+  "test_metrics": {
+    "roc_auc": 0.7363,
+    "pr_auc": 0.5887,
+    "ks_statistic": 0.4286,
+    "gini": 0.4726,
+    "brier_score": 0.1897,
+    "accuracy": 0.7533,
+    "precision": 0.7500,
+    "recall": 0.2667,
+    "f1_score": 0.3934,
+    "true_positive_rate": 0.2667,
+    "true_negative_rate": 0.9619,
+    "false_positive_rate": 0.0381,
+    "false_negative_rate": 0.7333
+  },
+  "evaluation_metrics": {
+    "checkpoint": "models/best_model.pkl",
+    "n_samples": 45,
+    "roc_auc": 0.9124,
+    "pr_auc": 0.8654,
+    "ks_statistic": 0.7535,
+    "gini": 0.8249,
+    "brier_score": 0.0,
+    "accuracy": 0.8667,
+    "precision": 0.7857,
+    "recall": 0.7857,
+    "f1_score": 0.7857,
+    "true_positive_rate": 0.7857,
+    "true_negative_rate": 0.9032,
+    "false_positive_rate": 0.0968,
+    "false_negative_rate": 0.2143
+  },
+  "evaluation_segment_metrics": [
+    {
+      "segment": "Segment_1",
+      "count": 9,
+      "default_rate": 0.0,
+      "mean_pred_proba": 0.0201,
+      "min_pred_proba": -0.0367,
+      "max_pred_proba": 0.0668
+    },
+    {
+      "segment": "Segment_2",
+      "count": 9,
+      "default_rate": 0.0,
+      "mean_pred_proba": 0.1081,
+      "min_pred_proba": 0.0689,
+      "max_pred_proba": 0.1525
+    },
+    {
+      "segment": "Segment_3",
+      "count": 9,
+      "default_rate": 0.3333,
+      "mean_pred_proba": 0.2983,
+      "min_pred_proba": 0.1817,
+      "max_pred_proba": 0.4175
+    },
+    {
+      "segment": "Segment_4",
+      "count": 9,
+      "default_rate": 0.3333,
+      "mean_pred_proba": 0.4974,
+      "min_pred_proba": 0.4262,
+      "max_pred_proba": 0.5813
+    },
+    {
+      "segment": "Segment_5",
+      "count": 9,
+      "default_rate": 0.8889,
+      "mean_pred_proba": 0.6756,
+      "min_pred_proba": 0.5921,
+      "max_pred_proba": 0.7609
+    }
+  ],
+  "feature_importance": [
+    {"rank": 1, "feature": "duration", "importance": 37.05},
+    {"rank": 2, "feature": "checking_status", "importance": 32.86},
+    {"rank": 3, "feature": "age", "importance": 23.98},
+    {"rank": 4, "feature": "credit_amount", "importance": 15.96},
+    {"rank": 5, "feature": "savings_status", "importance": 13.20},
+    {"rank": 6, "feature": "personal_status", "importance": 12.29},
+    {"rank": 7, "feature": "installment_commitment", "importance": 10.14},
+    {"rank": 8, "feature": "purpose", "importance": 4.80},
+    {"rank": 9, "feature": "property_magnitude", "importance": 3.56},
+    {"rank": 10, "feature": "residence_since", "importance": 2.76},
+    {"rank": 11, "feature": "employment", "importance": 2.68},
+    {"rank": 12, "feature": "housing", "importance": 2.59},
+    {"rank": 13, "feature": "credit_history", "importance": 1.70},
+    {"rank": 14, "feature": "job", "importance": 1.63},
+    {"rank": 15, "feature": "existing_credits", "importance": 1.11},
+    {"rank": 16, "feature": "other_payment_plans", "importance": 1.02},
+    {"rank": 17, "feature": "own_telephone", "importance": 0.76},
+    {"rank": 18, "feature": "num_dependents", "importance": 0.37},
+    {"rank": 19, "feature": "other_parties", "importance": 0.21},
+    {"rank": 20, "feature": "foreign_worker", "importance": 0.00}
+  ],
+  "artifacts": {
+    "best_model": "models/best_model.pkl",
+    "training_results": "results/training_results.json",
+    "evaluation_results": "results/evaluation.json",
+    "feature_importance_csv": "results/feature_importance.csv",
+    "roc_curve_plot": "results/roc_curve.png",
+    "pr_curve_plot": "results/pr_curve.png",
+    "confusion_matrix_plot": "results/confusion_matrix.png",
+    "training_log": "training_output.log"
+  }
+}

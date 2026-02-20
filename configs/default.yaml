@@ -22,7 +22,7 @@ model:
     num_leaves: 31
     max_depth: 6
     learning_rate: 0.05
-    n_estimators: 500
+    n_estimators: 100
     min_child_samples: 20
     subsample: 0.8
     subsample_freq: 1
@@ -37,7 +37,7 @@ model:
   xgboost:
     max_depth: 6
     learning_rate: 0.05
-    n_estimators: 500
+    n_estimators: 100
     min_child_weight: 1
     subsample: 0.8
     colsample_bytree: 0.8
@@ -50,7 +50,7 @@ model:
 
   # CatBoost parameters
   catboost:
-    iterations: 500
+    iterations: 100
     depth: 6
     learning_rate: 0.05
     l2_leaf_reg: 0.1
@@ -69,9 +69,9 @@ model:
 # Adaptive reweighting configuration
 reweighting:
   enabled: true
-  strategy: "shap"  # shap, permutation, gradient
+  strategy: "permutation"  # shap, permutation, gradient
   update_frequency: 5  # Update importance every N epochs
-  warmup_epochs: 10  # Number of epochs before enabling reweighting
+  warmup_epochs: 5  # Number of epochs before enabling reweighting
   top_k_features: 20  # Focus on top K most important features
   reweight_alpha: 0.3  # Strength of reweighting (0=none, 1=full)
   temporal_decay: 0.95  # Decay factor for historical importance
@@ -81,7 +81,7 @@ reweighting:
 # Curriculum learning configuration
 curriculum:
   enabled: true
-  warmup_epochs: 15
+  warmup_epochs: 8
   initial_easy_ratio: 0.7  # Start with 70% easy samples
   final_easy_ratio: 0.3  # End with 30% easy samples
   difficulty_metric: "prediction_variance"  # prediction_variance, loss, uncertainty
@@ -89,8 +89,8 @@ curriculum:
 
 # Training configuration
 training:
-  num_boost_round: 100  # Number of boosting rounds (epochs)
-  early_stopping_rounds: 20
+  num_boost_round: 30  # Number of boosting rounds (epochs)
+  early_stopping_rounds: 10
   verbose_eval: 10
   use_best_iteration: true
 
@@ -118,7 +118,7 @@ logging:
   log_to_file: true
   log_dir: "logs"
   mlflow:
-    enabled: true
+    enabled: false
     experiment_name: "adaptive_feature_importance"
     tracking_uri: "file:./mlruns"
 

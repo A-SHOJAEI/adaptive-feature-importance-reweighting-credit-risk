@@ -1,0 +1,61 @@
+{
+  "checkpoint": "models/best_model.pkl",
+  "n_samples": 45,
+  "metrics": {
+    "roc_auc": 0.9124423963133641,
+    "pr_auc": 0.8653735153735151,
+    "ks_statistic": 0.7534562211981567,
+    "gini": 0.8248847926267282,
+    "brier_score": 0.0,
+    "accuracy": 0.8666666666666667,
+    "precision": 0.7857142857142857,
+    "recall": 0.7857142857142857,
+    "f1_score": 0.7857142857142857,
+    "true_positive_rate": 0.7857142857142857,
+    "true_negative_rate": 0.9032258064516129,
+    "false_positive_rate": 0.0967741935483871,
+    "false_negative_rate": 0.21428571428571427
+  },
+  "segment_metrics": [
+    {
+      "segment": "Segment_4",
+      "count": 9,
+      "default_rate": 0.3333333333333333,
+      "mean_pred_proba": 0.49742916731551584,
+      "min_pred_proba": 0.42617023842505164,
+      "max_pred_proba": 0.5812742512533652
+    },
+    {
+      "segment": "Segment_1",
+      "count": 9,
+      "default_rate": 0.0,
+      "mean_pred_proba": 0.020125187263102227,
+      "min_pred_proba": -0.03666741465401606,
+      "max_pred_proba": 0.0668195066112295
+    },
+    {
+      "segment": "Segment_3",
+      "count": 9,
+      "default_rate": 0.3333333333333333,
+      "mean_pred_proba": 0.2983235971466173,
+      "min_pred_proba": 0.18169895258238455,
+      "max_pred_proba": 0.41746984693167727
+    },
+    {
+      "segment": "Segment_2",
+      "count": 9,
+      "default_rate": 0.0,
+      "mean_pred_proba": 0.10809670801573482,
+      "min_pred_proba": 0.06894147671224563,
+      "max_pred_proba": 0.15245841262088594
+    },
+    {
+      "segment": "Segment_5",
+      "count": 9,
+      "default_rate": 0.8888888888888888,
+      "mean_pred_proba": 0.6755775540446273,
+      "min_pred_proba": 0.5920761636003726,
+      "max_pred_proba": 0.760855474785304
+    }
+  ]
+}

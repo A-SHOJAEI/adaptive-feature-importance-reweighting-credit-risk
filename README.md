@@ -50,7 +50,44 @@ python scripts/predict.py --checkpoint models/best_model.pkl --input data/new_ap
 
 ## Key Results
 
-### Final Model Performance (Test Set)
+### Training Summary
+
+- **Dataset**: German Credit (1,000 samples, 20 features)
+- **Data split**: Train 700 / Validation 150 / Test 150
+- **Target distribution**: 700 non-default (70%) / 300 default (30%)
+- **Training rounds**: 30 max (early stopping patience: 10)
+- **Best validation ROC AUC**: 0.8171 at epoch 14
+- **Early stopping triggered**: Epoch 24
+- **Training duration**: ~62 minutes
+
+#### Validation ROC AUC Progression
+
+| Epoch | val_roc_auc |
+|-------|-------------|
+| 0     | 0.7934      |
+| 10    | 0.7920      |
+| 14    | 0.8171 (best) |
+| 20    | 0.7708      |
+| 24    | Early stopping |
+
+### Test Set Performance
+
+| Metric | Value |
+|--------|-------|
+| ROC AUC | 0.7363 |
+| PR AUC | 0.5887 |
+| Gini Coefficient | 0.4726 |
+| KS Statistic | 0.4286 |
+| Brier Score | 0.1897 |
+| Accuracy | 75.33% |
+| Precision | 75.00% |
+| Recall | 26.67% |
+| F1 Score | 0.3934 |
+| True Negative Rate | 96.19% |
+
+### Evaluation Set Performance
+
+Evaluated on a held-out 45-sample evaluation set using the best checkpoint (`models/best_model.pkl`):
 
 | Metric | Value |
 |--------|-------|
@@ -63,19 +100,32 @@ python scripts/predict.py --checkpoint models/best_model.pkl --input data/new_ap
 | Recall | 78.57% |
 | F1 Score | 0.7857 |
 
-**Training Details:**
-- Best validation score: 0.7602 (epoch 15)
-- Test ROC AUC: 0.7323 (on held-out set)
-- Training configuration: `configs/default.yaml`
+#### Segment-Level Analysis (Evaluation Set)
 
-**Top Contributing Features:**
-1. checking_status (40.12)
-2. credit_amount (37.12)
-3. duration (31.00)
-4. age (24.71)
-5. residence_since (13.93)
+| Segment | Count | Default Rate | Mean Pred Proba |
+|---------|-------|-------------|-----------------|
+| Segment 1 | 9 | 0.00% | 0.0201 |
+| Segment 2 | 9 | 0.00% | 0.1081 |
+| Segment 3 | 9 | 33.33% | 0.2983 |
+| Segment 4 | 9 | 33.33% | 0.4974 |
+| Segment 5 | 9 | 88.89% | 0.6756 |
 
-Run `python scripts/train.py` to reproduce results.
+### Top Contributing Features
+
+| Rank | Feature | Importance |
+|------|---------|------------|
+| 1 | duration | 37.05 |
+| 2 | checking_status | 32.86 |
+| 3 | age | 23.98 |
+| 4 | credit_amount | 15.96 |
+| 5 | savings_status | 13.20 |
+| 6 | personal_status | 12.29 |
+| 7 | installment_commitment | 10.14 |
+| 8 | purpose | 4.80 |
+| 9 | property_magnitude | 3.56 |
+| 10 | residence_since | 2.76 |
+
+Training configuration: `configs/default.yaml`. Run `python scripts/train.py` to reproduce results.
 
 ## Project Structure
 
